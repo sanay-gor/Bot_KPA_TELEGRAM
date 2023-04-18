@@ -1,5 +1,6 @@
 import logging
 import telegram
+import re
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from responses import responses
@@ -15,11 +16,15 @@ def start(update: Update, _: CallbackContext):
 def handle_message(update: Update, _: CallbackContext):
     question = update.message.text.lower()
 
-    if 'бухгалтерию' in question or 'бухгалтерия' in question or 'бухгалтерский' in question or 'финансы' in question or 'зп' in question or 'зарплата' in question or 'документы' in question:
+    accounting_keywords = r'\b(бухгалтери[яю]|бухгалтерск(ий|ой)|финанс|зп|зарплат|документ)\b'
+    hr_keywords = r'\b(отдел кадр|кадр|hr|персонал|найм|увольнен)\b'
+    greetings_keywords = r'\b(привет|здравствуйте|добрый день|добрый вечер|доброе утро)\b'
+
+    if re.search(accounting_keywords, question):
         answer = responses['accounting']
-    elif 'отдел кадров' in question or 'кадры' in question or 'hr' in question or 'персонал' in question or 'найм' in question or 'увольнение' in question:
+    elif re.search(hr_keywords, question):
         answer = responses['hr']
-    elif 'привет' in question or 'здравствуйте' in question or 'добрый день' in question or 'добрый вечер' in question or 'доброе утро' in question:
+    elif re.search(greetings_keywords, question):
         answer = responses['greetings']
     else:
         answer = responses['default'].format(question)
