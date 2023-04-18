@@ -1,8 +1,8 @@
 import logging
 import telegram
 import re
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext, CallbackQueryHandler
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from responses import responses
 from urllib.parse import quote
 
@@ -13,22 +13,11 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 def start(update: Update, _: CallbackContext):
-    keyboard = [
-        [InlineKeyboardButton("Бухгалтерия", callback_data='accounting'),
-         InlineKeyboardButton("Отдел кадров", callback_data='hr')],
-        [InlineKeyboardButton("IT", callback_data='it'),
-         InlineKeyboardButton("Продажи", callback_data='sales')],
-        [InlineKeyboardButton("Маркетинг", callback_data='marketing'),
-         InlineKeyboardButton("Разработка", callback_data='development')],
-        [InlineKeyboardButton("Управление проектами", callback_data='project_management'),
-         InlineKeyboardButton("Юридический отдел", callback_data='legal')]
-    ]
+    update.message.reply_text("Привет! Я бот, который отвечает на вопросы сотрудников. Задайте свой вопрос.")
 
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text("Привет! Я бот, который отвечает на вопросы сотрудников. Выберите категорию вопроса:", reply_markup=reply_markup)
+def handle_message(update: Update, _: CallbackContext):
+    question = update.message.text.lower()
 
-    def handle_message(update: Update, _: CallbackContext):
-        question = update.message.text.lower()
     accounting_keywords = r'\b(бухгалтери[яюе]|зп|бухгалтерск(ий|ой|ого|ая|ое)|финанс(ов|ы)?|з[а]?рплат(а|у|е|ой|ы)?|документ[ыа]?|налог[аи]?|отч[её]т[ау]?|бюджет)\b'
     hr_keywords = r'\b(отдел(а|е)? кадр(ов|ы)?|кадров(ый|ого|ом|ая|ое|ых)?|hr|персонал|найм|увольнен(ие|ия)?|трудоустро[йи]ство|трудов(ой|ая|ые)? договор|работник[аи]?|сотрудник[аи]?)\b'
     greetings_keywords = r'\b(привет|здравствуйте|добр(ый|ого) день|добр(ый|ого) вечер|доброе утро)\b'
@@ -39,13 +28,6 @@ def start(update: Update, _: CallbackContext):
     project_management_keywords = r'\b(управление проектами|менеджер проекта|планирование|scrum|график|задач[аи]?|контроль|агил[е]?|методология)\b'
     legal_keywords = r'\b(юридический отдел|адвокат|юрист|закон|право|договор|суд|спор|регистрация|лиценз[ияи]?)\b'
 
-    def button(update: Update, _: CallbackContext):
-    query = update.callback_query
-    query.answer()
-    query.edit_message_text(text=f"Выбрана категория: {query.data}. Теперь задайте свой вопрос по этой категории.")
-
-def handle_message(update: Update, _: CallbackContext):
-    question = update.message.text.lower()
 
     if re.search(accounting_keywords, question, re.IGNORECASE):
         answer = responses['accounting']
@@ -71,6 +53,7 @@ def handle_message(update: Update, _: CallbackContext):
         answer = responses['error'].format(question)
 
     update.message.reply_text(answer)
+
 def error(update: Update, context: CallbackContext):
     logger.error('Update "%s" caused error "%s"', update, context.error)
 
@@ -80,7 +63,6 @@ def main():
 
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CallbackQueryHandler(button))
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_message))
     dispatcher.add_error_handler(error)
 
