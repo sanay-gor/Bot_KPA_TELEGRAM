@@ -7,7 +7,7 @@ from responses import responses
 from urllib.parse import quote
 
 
-API_KEY = "6037731646:AAESrQjxr0Kf5O0NO8vyMX_ZI5JditpoAQg"
+API_KEY = "6214551617:AAGDXgiFtzZkoMaTxVrBXh2ESpSUvh9vyZc"
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
