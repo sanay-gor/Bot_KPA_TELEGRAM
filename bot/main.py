@@ -16,9 +16,9 @@ def start(update: Update, _: CallbackContext):
 def handle_message(update: Update, _: CallbackContext):
     question = update.message.text.lower()
 
-    accounting_keywords = r'\b(бухгалтери[яю]|бухгалтерск(ий|ой)|финанс|зп|зарплат|документ)\b'
-    hr_keywords = r'\b(отдел кадр|кадр|hr|персонал|найм|увольнен)\b'
-    greetings_keywords = r'\b(привет|здравствуйте|добрый день|добрый вечер|доброе утро)\b'
+    accounting_keywords = r'\b(бухгалтери[яюе]|бухгалтерск(ий|ой|ого)|финанс|з[а]?рплат[ыау]?|документ|налог|отч[её]т|бюджет)\b'
+    hr_keywords = r'\b(отдел(а|е)? кадр(ов|ы)?|кадров(ый|ого|ом)?|hr|персонал|найм|увольнен|трудоустро[йи]ство|трудов[ао]?й договор|работник|сотрудник)\b'
+    greetings_keywords = r'\b(привет|здравствуйте|добр(ый|ого) день|добр(ый|ого) вечер|доброе утро)\b'
 
     if re.search(accounting_keywords, question):
         answer = responses['accounting']
