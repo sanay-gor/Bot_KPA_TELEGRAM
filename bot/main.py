@@ -16,18 +16,37 @@ def start(update: Update, _: CallbackContext):
 def handle_message(update: Update, _: CallbackContext):
     question = update.message.text.lower()
 
-    accounting_keywords = r'\b(бухгалтери[яюе]|бухгалтерск(ий|ой|ого)|финанс|з[а]?рплат[ыауе]?|документ|налог|отч[её]т|бюджет)\b'
-    hr_keywords = r'\b(отдел(а|е)? кадр(ов|ы)?|кадров(ый|ого|ом)?|hr|персонал|найм|увольнен|трудоустро[йи]ство|трудов[ао]?й договор|работник|сотрудник)\b'
+    accounting_keywords = r'\b(бухгалтери[яюе]|бухгалтерск(ий|ой|ого|ая|ое)|финанс(ов|ы)?|з[а]?рплат(а|у|е|ой|ы)?|документ[ыа]?|налог[аи]?|отч[её]т[ау]?|бюджет)\b'
+    hr_keywords = r'\b(отдел(а|е)? кадр(ов|ы)?|кадров(ый|ого|ом|ая|ое|ых)?|hr|персонал|найм|увольнен(ие|ия)?|трудоустро[йи]ство|трудов(ой|ая|ые)? договор|работник[аи]?|сотрудник[аи]?)\b'
     greetings_keywords = r'\b(привет|здравствуйте|добр(ый|ого) день|добр(ый|ого) вечер|доброе утро)\b'
+    it_keywords = r'\b(it|информационн[ыа]е технологи[и]?|техническая поддержка|администратор|компьютер|программ|сет[иь]|системн[ыа]й администратор)\b'
+    sales_keywords = r'\b(продаж[и]?|отдел продаж|менеджер по продажам|клиент|контракт|сделк[аи])\b'
+    marketing_keywords = r'\b(маркетинг|реклам[аы]|бренд|продвижение|smm|seo|контент|социальн[ыа]е? меди[а]?|кампани[яи]?)\b'
+    development_keywords = r'\b(разработк[аи]|инженер[ы]?|программист|код|дизайнер|тестировщик|devops|frontend|backend|fullstack)\b'
+    project_management_keywords = r'\b(управление проектами|менеджер проекта|планирование|scrum|график|задач[аи]?|контроль|агил[е]?|методология)\b'
+    legal_keywords = r'\b(юридический отдел|адвокат|юрист|закон|право|договор|суд|спор|регистрация|лиценз[ияи]?)\b'
 
-    if re.search(accounting_keywords, question):
+
+    if re.search(accounting_keywords, question, re.IGNORECASE):
         answer = responses['accounting']
-    elif re.search(hr_keywords, question):
+    elif re.search(hr_keywords, question, re.IGNORECASE):
         answer = responses['hr']
-    elif re.search(greetings_keywords, question):
+    elif re.search(greetings_keywords, question, re.IGNORECASE):
         answer = responses['greetings']
+    elif re.search(it_keywords, question, re.IGNORECASE):
+        answer = responses['it']
+    elif re.search(sales_keywords, question, re.IGNORECASE):
+        answer = responses['sales']
+    elif re.search(marketing_keywords, question, re.IGNORECASE):
+        answer = responses['marketing']
+    elif re.search(development_keywords, question, re.IGNORECASE):
+        answer = responses['development']
+    elif re.search(project_management_keywords, question, re.IGNORECASE):
+        answer = responses['project_management']
+    elif re.search(legal_keywords, question, re.IGNORECASE):
+        answer = responses['legal']
     else:
-        answer = responses['default'].format(question)
+        answer = responses['error'].format(question)
 
     update.message.reply_text(answer)
 
