@@ -4,6 +4,8 @@ import re
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from responses import responses
+from urllib.parse import quote
+
 
 API_KEY = "6037731646:AAESrQjxr0Kf5O0NO8vyMX_ZI5JditpoAQg"
 
@@ -34,9 +36,9 @@ def handle_message(update: Update, _: CallbackContext):
     elif re.search(greetings_keywords, question, re.IGNORECASE):
         answer = responses['greetings']
     elif re.search(it_keywords, question, re.IGNORECASE):
-        answer = responses['it']
-        yandex_search_url = f"https://yandex.ru/search/?text= {question}"
-        answer = f"{responses['it']} Для более подробной информации вы можете также поискать ответ на Яндексе по следующей ссылке: {yandex_search_url}"
+        encoded_question = quote(question)
+        yandex_search_url = f"https://yandex.ru/search/?text={encoded_question}"
+        answer = responses['it'] + f"\nДополнительно вы можете поискать информацию по этому запросу в Яндекс: {yandex_search_url}"
     elif re.search(sales_keywords, question, re.IGNORECASE):
         answer = responses['sales']
     elif re.search(marketing_keywords, question, re.IGNORECASE):
