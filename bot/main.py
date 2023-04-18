@@ -35,6 +35,8 @@ def handle_message(update: Update, _: CallbackContext):
         answer = responses['greetings']
     elif re.search(it_keywords, question, re.IGNORECASE):
         answer = responses['it']
+        yandex_search_url = f"https://yandex.ru/search/?text={question}"
+        answer = f"{responses['it']} Для более подробной информации вы можете также поискать ответ на Яндексе по следующей ссылке: {yandex_search_url}"
     elif re.search(sales_keywords, question, re.IGNORECASE):
         answer = responses['sales']
     elif re.search(marketing_keywords, question, re.IGNORECASE):
